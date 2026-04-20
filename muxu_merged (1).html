@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>身体画像·沐煦版｜遇见你的身体能量</title>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--cream:#FAF6EF;--gold:#C8A96E;--dark:#1A1612;--gold-light:#E8D5B0;--gold-dark:#9A7B45;--warm-gray:#8C7E6A;--accent:#B8544F;--night:#0F0E12}
+body{font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;background:var(--cream);min-height:100vh;color:var(--dark);display:flex;justify-content:center;padding:0;-webkit-font-smoothing:antialiased}
+.stage{max-width:480px;width:100%;min-height:100vh;position:relative;overflow:hidden}
+.welcome{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;background:linear-gradient(180deg,var(--cream) 0%,#F5EDE0 100%);position:relative}
+.welcome::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:1px;height:80px;background:linear-gradient(180deg,transparent,var(--gold))}
+.w-brand{font-family:"Cormorant Garamond",serif;font-size:11px;letter-spacing:8px;color:var(--gold-dark);margin-bottom:6px;text-transform:uppercase;font-weight:300}
+.w-logo{font-size:36px;letter-spacing:12px;color:var(--dark);font-weight:300;margin:12px 0 8px}
+.w-sub{font-size:13px;color:var(--gold-dark);letter-spacing:4px;margin-bottom:40px;font-weight:300}
+.w-title{font-size:22px;color:var(--dark);letter-spacing:3px;font-weight:400;line-height:1.8;margin-bottom:8px}
+.w-desc{font-size:14px;color:var(--warm-gray);line-height:2;letter-spacing:1px;margin-bottom:50px;max-width:320px}
+.w-start{background:transparent;border:1px solid var(--gold);color:var(--dark);padding:14px 48px;font-family:inherit;font-size:15px;letter-spacing:6px;cursor:pointer;transition:all .4s ease;position:relative}
+.w-start:hover{background:var(--gold);color:var(--cream)}
+.w-start::before,.w-start::after{content:"";position:absolute;width:12px;height:12px;border-color:var(--gold);border-style:solid;transition:all .4s}
+.w-start::before{top:-4px;left:-4px;border-width:1px 0 0 1px}.w-start::after{bottom:-4px;right:-4px;border-width:0 1px 1px 0}
+.quiz-wrap{min-height:100vh;padding:0 24px;display:flex;flex-direction:column;background:var(--cream)}
+.q-progress{padding:30px 0 20px;display:flex;align-items:center;gap:12px}
+.q-bar{flex:1;height:2px;background:var(--gold-light);position:relative;overflow:hidden}
+.q-bar-fill{height:100%;background:var(--gold);transition:width .5s ease;width:0}
+.q-num{font-size:14px;color:var(--warm-gray);letter-spacing:2px;font-family:"Cormorant Garamond",serif}
+.q-card{flex:1;display:flex;flex-direction:column;justify-content:center;padding-bottom:40px;opacity:1;transform:translateY(0);transition:opacity .4s,transform .4s}
+.q-card.exit{opacity:0;transform:translateY(-20px)}.q-card.enter{opacity:0;transform:translateY(20px)}
+.q-dim{font-size:11px;color:var(--gold-dark);letter-spacing:6px;margin-bottom:16px;font-weight:300}
+.q-text{font-size:18px;color:var(--dark);line-height:1.8;letter-spacing:1.5px;margin-bottom:32px;font-weight:400}
+.q-sub{font-size:13px;color:var(--warm-gray);margin-top:-20px;margin-bottom:28px;letter-spacing:1px}
+.q-opts{display:flex;flex-direction:column;gap:10px}
+.q-opt{background:transparent;border:1px solid var(--gold-light);color:var(--dark);padding:14px 18px;text-align:left;font-family:inherit;font-size:14px;letter-spacing:.5px;cursor:pointer;transition:all .35s ease;line-height:1.6;position:relative;overflow:hidden}
+.q-opt::before{content:"";position:absolute;inset:0;background:var(--gold);opacity:0;transition:opacity .35s;z-index:0}
+.q-opt span{position:relative;z-index:1}.q-opt:hover{border-color:var(--gold)}.q-opt:hover::before{opacity:.08}
+.q-opt.selected{border-color:var(--gold);background:rgba(200,169,110,.12)}.q-opt.selected::before{opacity:.12}
+.rank-hint{font-size:12px;color:var(--warm-gray);letter-spacing:1px;margin-bottom:16px;line-height:1.8}
+.rank-grid{display:flex;flex-direction:column;gap:10px}
+.rank-item{display:flex;align-items:center;gap:12px;padding:14px 16px;border:1px solid var(--gold-light);cursor:pointer;transition:all .3s;font-size:14px;color:var(--dark);letter-spacing:1px;font-family:inherit;background:transparent;text-align:left;line-height:1.5}
+.rank-item:hover{border-color:var(--gold)}.rank-item.ranked{border-color:var(--gold);background:rgba(200,169,110,.1)}
+.rank-badge{width:24px;height:24px;border-radius:50%;border:1px solid var(--gold-light);display:flex;align-items:center;justify-content:center;font-family:"Cormorant Garamond",serif;font-size:13px;color:var(--warm-gray);flex-shrink:0;transition:all .3s}
+.rank-item.ranked .rank-badge{background:var(--gold);border-color:var(--gold);color:var(--cream)}
+.rank-emoji{font-size:18px;flex-shrink:0}.rank-label{flex:1}
+.rank-submit{margin-top:20px;width:100%;padding:16px;background:var(--gold);border:1px solid var(--gold);color:var(--cream);font-family:inherit;font-size:15px;letter-spacing:6px;cursor:pointer;transition:all .3s}
+.rank-submit:hover{background:var(--gold-dark)}.rank-submit:disabled{opacity:.3;cursor:not-allowed}
+.q-nav{display:flex;gap:10px;margin-top:24px}
+.q-nav-btn{flex:1;padding:14px;background:transparent;border:1px solid var(--gold-light);color:var(--warm-gray);font-family:inherit;font-size:14px;letter-spacing:4px;cursor:pointer;transition:all .3s}
+.q-nav-btn:hover:not(:disabled){border-color:var(--gold);color:var(--dark)}
+.q-nav-btn:disabled{opacity:.3;cursor:not-allowed}
+.q-nav-btn.next{background:var(--gold);border-color:var(--gold);color:var(--cream);flex:2}
+.q-nav-btn.next:hover:not(:disabled){background:var(--gold-dark)}
+.q-nav-btn.next:disabled{background:var(--gold-light);border-color:var(--gold-light);color:var(--cream);opacity:.6}
+.analyzing{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;background:var(--cream)}
+.ripple-box{width:140px;height:140px;position:relative;margin-bottom:40px}
+.ripple{position:absolute;inset:0;border:1px solid var(--gold);border-radius:50%;animation:rip 2.4s ease-out infinite;opacity:0}
+.ripple:nth-child(2){animation-delay:.8s}.ripple:nth-child(3){animation-delay:1.6s}
+@keyframes rip{0%{transform:scale(.4);opacity:.8}100%{transform:scale(1.2);opacity:0}}
+.ripple-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;background:var(--gold);border-radius:50%}
+.ana-text{font-size:14px;color:var(--warm-gray);letter-spacing:4px;animation:pul 1.5s ease-in-out infinite}
+@keyframes pul{0%,100%{opacity:.4}50%{opacity:1}}
+.result-wrap{padding:24px 16px 40px;background:var(--cream)}
+.card{background:var(--cream);border:1px solid var(--gold);position:relative;overflow:hidden;box-shadow:0 4px 30px rgba(26,22,18,.08)}
+.card::before{content:"";position:absolute;inset:6px;border:0.5px solid rgba(200,169,110,.4);pointer-events:none;z-index:1}
+.card-header{text-align:center;padding:32px 20px 24px;border-bottom:1px solid rgba(200,169,110,.3);position:relative}
+.card-header::after{content:"";position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:40px;height:1px;background:var(--gold)}
+.ch-brand{font-family:"Cormorant Garamond",serif;font-size:10px;letter-spacing:6px;color:var(--gold-dark);margin-bottom:4px;text-transform:uppercase;font-weight:300}
+.ch-type-en{font-family:"Cormorant Garamond",serif;font-size:11px;letter-spacing:3px;color:var(--warm-gray);margin-bottom:8px;font-weight:300}
+.ch-emoji{font-size:32px;margin-bottom:4px}
+.ch-name{font-size:34px;letter-spacing:10px;color:var(--dark);font-weight:300;margin-bottom:4px}
+.ch-subtitle{font-size:13px;color:var(--gold-dark);letter-spacing:3px;font-weight:300;margin-bottom:6px}
+.ch-energy{font-size:12px;color:var(--accent);letter-spacing:4px;font-weight:400;margin-bottom:10px}
+.ch-tag{font-size:14px;color:var(--warm-gray);letter-spacing:2px;font-weight:300;line-height:1.8}
+.vibe-tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:12px}
+.vibe-tag{display:inline-block;padding:4px 12px;background:rgba(200,169,110,.12);border:1px solid rgba(200,169,110,.3);font-size:11px;color:var(--gold-dark);letter-spacing:1.5px}
+/* 朋友圈 */
+.pyq-box{margin-top:14px;padding:10px 16px;background:rgba(200,169,110,.08);border-left:2px solid var(--gold);text-align:left}
+.pyq-label{font-size:10px;color:var(--gold-dark);letter-spacing:3px;margin-bottom:4px}
+.pyq-text{font-size:13px;color:var(--dark);line-height:1.8;font-weight:300}
+.starmap{position:relative;background:radial-gradient(ellipse at center,#1a1825 0%,var(--night) 100%);padding:30px 16px 24px;text-align:center;overflow:hidden;border-bottom:1px solid rgba(200,169,110,.3)}
+.starmap canvas{display:block;margin:0 auto 16px;max-width:100%}
+.star-rarity{position:relative;z-index:2}
+.star-label{font-size:11px;color:rgba(200,169,110,.6);letter-spacing:4px;margin-bottom:6px}
+.star-pct{font-family:"Cormorant Garamond",serif;font-size:56px;color:var(--gold);font-weight:300;line-height:1;margin-bottom:4px}.star-pct span{font-size:28px}
+.star-sub{font-size:12px;color:rgba(200,169,110,.7);letter-spacing:2px;margin-bottom:6px}
+.star-talent{font-size:13px;color:var(--gold-light);letter-spacing:1.5px;line-height:1.8}.star-talent em{font-style:normal;color:var(--gold);font-weight:600}
+.radar-section{padding:24px 16px;text-align:center;border-bottom:1px solid rgba(200,169,110,.3)}
+.radar-label{font-size:12px;color:var(--gold-dark);letter-spacing:4px;margin-bottom:16px}
+.radar-label::before,.radar-label::after{content:"";display:inline-block;width:20px;height:1px;background:var(--gold-light);vertical-align:middle;margin:0 10px}
+.radar-svg{display:block;margin:0 auto;max-width:280px}
+.card-body{padding:24px 22px}
+.sec{padding:14px 0;border-bottom:1px solid rgba(200,169,110,.15)}.sec:last-child{border-bottom:none}
+.sec-label{font-size:12px;color:var(--gold-dark);letter-spacing:4px;margin-bottom:8px;font-weight:400}
+.sec-label::before{content:"";display:inline-block;width:12px;height:1px;background:var(--gold);margin-right:8px;vertical-align:middle}
+.sec-content{font-size:14px;color:var(--dark);line-height:2;letter-spacing:.5px;font-weight:300}
+.prophecy-box{background:linear-gradient(180deg,rgba(200,169,110,.06),rgba(200,169,110,.12));border:1px solid rgba(200,169,110,.25);padding:22px 20px;margin-top:4px;position:relative}
+.prophecy-box::before{content:"✦";position:absolute;top:12px;right:16px;color:var(--gold-light);font-size:14px;opacity:.5}
+.prophecy-title{font-size:12px;color:var(--gold-dark);letter-spacing:4px;margin-bottom:10px}
+.prophecy-content{font-size:14px;color:var(--dark);line-height:2.2;letter-spacing:.5px;font-weight:300}
+.priority-box{margin-top:4px;display:flex;gap:8px;flex-wrap:wrap}
+.pri-tag{padding:5px 14px;font-size:12px;letter-spacing:2px}
+.pri-tag.t1{background:var(--gold);color:var(--cream)}.pri-tag.t2{background:rgba(200,169,110,.2);color:var(--dark)}.pri-tag.t3{background:rgba(200,169,110,.1);color:var(--warm-gray)}
+.course-box{background:rgba(200,169,110,.08);border:1px solid rgba(200,169,110,.25);padding:18px 20px;margin-top:4px}
+.course-track{font-size:13px;color:var(--gold-dark);letter-spacing:3px;margin-bottom:6px;font-weight:400}
+.course-desc{font-size:13px;color:var(--dark);line-height:1.9;letter-spacing:.5px;font-weight:300}
+.match-box{background:rgba(200,169,110,.06);border:1px solid rgba(200,169,110,.25);padding:18px 20px;margin-top:4px;text-align:center}
+.match-label{font-size:11px;color:var(--gold-dark);letter-spacing:3px;margin-bottom:8px}
+.match-names{font-size:16px;color:var(--dark);letter-spacing:3px;margin-bottom:6px}
+.match-desc{font-size:12px;color:var(--warm-gray);line-height:1.8;letter-spacing:.5px}
+.avoid-box{background:rgba(184,84,79,.05);border:1px solid rgba(184,84,79,.15);padding:18px 20px;margin-top:8px;text-align:center}
+.avoid-label{font-size:11px;color:var(--accent);letter-spacing:3px;margin-bottom:8px}
+.avoid-names{font-size:15px;color:var(--dark);letter-spacing:3px;margin-bottom:6px}
+.avoid-desc{font-size:12px;color:var(--warm-gray);line-height:1.8;letter-spacing:.5px}
+.card-footer{text-align:center;padding:24px 20px;border-top:1px solid rgba(200,169,110,.3);position:relative}
+.card-footer::before{content:"";position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:40px;height:1px;background:var(--gold)}
+.cf-logo{font-size:16px;color:var(--dark);letter-spacing:6px;margin-bottom:4px}
+.cf-en{font-family:"Cormorant Garamond",serif;font-size:10px;letter-spacing:4px;color:var(--warm-gray);margin-bottom:16px;text-transform:uppercase}
+.cf-nudge-title{font-size:12px;color:var(--gold-dark);letter-spacing:5px;margin-bottom:10px;font-weight:400}
+.cf-cta-main{display:inline-block;padding:10px 24px;border:1px solid var(--gold);font-size:13px;color:var(--dark);letter-spacing:3px;margin-bottom:8px}
+.cf-cta-sub{font-size:13px;color:var(--warm-gray);letter-spacing:1px;line-height:2;font-weight:300}
+.cf-price{font-size:11px;color:var(--gold-dark);letter-spacing:1px;margin-top:8px}
+.cf-addr{font-size:11px;color:var(--warm-gray);letter-spacing:1px;line-height:1.8;margin-top:6px;margin-bottom:20px}
+.cf-action-row{display:flex;gap:10px;margin-top:4px}
+.cf-btn-outline{flex:1;padding:12px 8px;background:transparent;border:1px solid var(--gold);color:var(--dark);font-family:inherit;font-size:12px;letter-spacing:3px;cursor:pointer;transition:all .3s;text-align:center}
+.cf-btn-outline:hover{background:rgba(200,169,110,.1)}
+.cf-btn-fill{flex:1;padding:12px 8px;background:var(--gold);border:1px solid var(--gold);color:var(--cream);font-family:inherit;font-size:12px;letter-spacing:3px;cursor:pointer;transition:all .3s;text-align:center}
+.cf-btn-fill:hover{background:var(--gold-dark)}
+/* 了解沐煦 / 预约页面 */
+.page-wrap{display:none;min-height:100vh;background:var(--cream)}
+.page-wrap.active{display:block}
+.page-back-btn{display:flex;align-items:center;gap:8px;padding:20px 20px 0;cursor:pointer;background:none;border:none;font-family:inherit;font-size:12px;color:var(--warm-gray);letter-spacing:2px}
+.page-back-btn:hover{color:var(--dark)}
+.about-body{padding:32px 20px 48px}
+.about-head{text-align:center;margin-bottom:28px}
+.about-logo{font-size:22px;letter-spacing:8px;color:var(--dark);font-weight:300;margin-bottom:4px}
+.about-en-sm{font-family:"Cormorant Garamond",serif;font-size:11px;color:var(--gold-dark);letter-spacing:6px;font-weight:300;font-style:italic;margin-bottom:16px}
+.about-divider{display:flex;align-items:center;gap:10px;margin:0 auto 20px;width:160px}
+.about-divider span{flex:1;height:0.5px;background:var(--gold-light)}
+.about-divider i{width:3px;height:3px;background:var(--gold);transform:rotate(45deg);flex-shrink:0}
+.about-slogan{font-size:13px;color:var(--gold-dark);letter-spacing:4px;line-height:2}
+.about-sec{margin-bottom:28px}
+.about-sec-title{font-size:10px;color:var(--gold-dark);letter-spacing:5px;margin-bottom:14px;padding-bottom:8px;border-bottom:0.5px solid var(--gold-light)}
+.about-text{font-size:13px;color:var(--dark);line-height:2.1;letter-spacing:.5px}
+.about-text p{margin-bottom:14px}.about-text p:last-child{margin-bottom:0}
+.about-char-row{display:flex;align-items:baseline;gap:6px;margin-bottom:4px}
+.about-char{font-size:20px;color:var(--dark);letter-spacing:4px;font-weight:300}
+.about-char-en{font-family:"Cormorant Garamond",serif;font-size:11px;color:var(--warm-gray);letter-spacing:3px;font-style:italic}
+.about-char-desc{font-size:12px;color:var(--warm-gray);line-height:1.9;letter-spacing:.5px;margin-bottom:16px}
+.course-cards{display:flex;flex-direction:column;gap:12px}
+.course-card{border:0.5px solid var(--gold-light);padding:16px}
+.cc-head{display:flex;align-items:baseline;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.cc-name{font-size:15px;color:var(--dark);letter-spacing:3px;font-weight:400}
+.cc-tag{font-size:10px;color:var(--gold-dark);letter-spacing:2px;border:0.5px solid var(--gold-light);padding:2px 8px;margin-left:auto;flex-shrink:0}
+.cc-desc{font-size:12px;color:var(--warm-gray);line-height:1.9;letter-spacing:.3px;margin-bottom:10px}
+.cc-items{display:flex;flex-wrap:wrap;gap:5px}
+.cc-item{font-size:11px;color:var(--gold-dark);padding:2px 10px;background:rgba(200,169,110,.08);border:0.5px solid rgba(200,169,110,.3);letter-spacing:1px}
+.booking-head{text-align:center;padding:32px 20px 24px}
+.bh-top{font-family:"Cormorant Garamond",serif;font-size:10px;letter-spacing:6px;color:var(--gold-dark);margin-bottom:8px;text-transform:uppercase;font-weight:300}
+.bh-title{font-size:18px;letter-spacing:4px;color:var(--dark);font-weight:300;margin-bottom:6px}
+.bh-sub{font-size:12px;color:var(--warm-gray);letter-spacing:2px;line-height:2}
+.booking-body{padding:0 20px 48px}
+.bsec{margin-bottom:24px}
+.bsec-label{font-size:10px;color:var(--gold-dark);letter-spacing:5px;margin-bottom:14px;padding-bottom:8px;border-bottom:0.5px solid var(--gold-light)}
+.binfo-row{display:flex;align-items:flex-start;gap:14px;padding:12px 0;border-bottom:0.5px solid var(--gold-light)}
+.binfo-row:last-child{border-bottom:none}
+.binfo-icon{width:32px;height:32px;border:0.5px solid var(--gold-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.binfo-icon svg{width:14px;height:14px;stroke:var(--gold);fill:none;stroke-width:1.2}
+.binfo-label{font-size:10px;color:var(--warm-gray);letter-spacing:3px;margin-bottom:4px}
+.binfo-val{font-size:13px;color:var(--dark);letter-spacing:.5px;line-height:1.8}
+.booking-note{margin:20px 0 0;padding:14px 16px;background:#F5EDE0;border-left:2px solid var(--gold)}
+.booking-note-text{font-size:12px;color:var(--warm-gray);line-height:2.2;letter-spacing:.3px}
+.viral-section{margin-top:20px;background:var(--cream);border:1px solid var(--gold);padding:24px 20px;text-align:center;position:relative}
+.viral-section::before{content:"";position:absolute;inset:6px;border:0.5px solid rgba(200,169,110,.4);pointer-events:none}
+.viral-title{font-size:15px;color:var(--dark);letter-spacing:3px;margin-bottom:6px;font-weight:400}
+.viral-sub{font-size:13px;color:var(--warm-gray);line-height:2;letter-spacing:1px;margin-bottom:16px}
+.copy-box{background:rgba(200,169,110,.06);border:1px solid rgba(200,169,110,.25);padding:16px;margin-bottom:16px;text-align:left;font-size:13px;color:var(--dark);line-height:2;letter-spacing:.5px;max-height:200px;overflow-y:auto;white-space:pre-wrap}
+.viral-btns{display:flex;flex-direction:column;gap:10px}
+.v-btn{padding:14px;background:transparent;border:1px solid var(--gold);color:var(--dark);font-family:inherit;font-size:14px;letter-spacing:4px;cursor:pointer;transition:all .3s}
+.v-btn:hover{background:var(--gold);color:var(--cream)}.v-btn.primary{background:var(--gold);color:var(--cream)}.v-btn.primary:hover{background:var(--gold-dark)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.act-btn{padding:14px;background:transparent;border:1px solid var(--gold);color:var(--dark);font-family:inherit;font-size:14px;letter-spacing:4px;cursor:pointer;transition:all .3s}
+.act-btn:hover{background:var(--gold);color:var(--cream)}.act-btn:disabled{opacity:.4;cursor:wait}
+.act-btn.primary{background:var(--gold);color:var(--cream)}.act-btn.primary:hover{background:var(--gold-dark)}
+.save-hint{text-align:center;font-size:12px;color:var(--warm-gray);margin-top:16px;letter-spacing:1px;line-height:1.8}
+.save-preview{margin-top:16px;text-align:center}.save-preview img{max-width:100%;border:1px solid var(--gold-light);box-shadow:0 2px 16px rgba(0,0,0,.08)}
+.hidden{display:none!important}
+@media(max-width:380px){.ch-name{font-size:28px;letter-spacing:8px}.q-text{font-size:16px}.q-opt{padding:12px 14px;font-size:13px}.star-pct{font-size:44px}}
+</style></head>
+<body>
+<div class="stage">
+<div id="welcome" class="welcome">
+  <div class="w-brand">MUXU PILATES</div><div class="w-logo">沐 煦</div>
+  <div class="w-sub">沐天地之气 · 煦生命之光</div>
+  <div class="w-title">身体能量测试</div>
+  <div class="w-desc">10道关于身体感知的小问题<br>解锁你的专属能量图谱<br>看看你是什么「练家子」体质</div>
+  <button class="w-start" onclick="startQuiz()">开 始 测 试</button>
+</div>
+<div id="quizWrap" class="quiz-wrap hidden">
+  <div class="q-progress"><div class="q-bar"><div class="q-bar-fill" id="qBarFill"></div></div><div class="q-num" id="qNum">1/11</div></div>
+  <div class="q-card" id="qCard"></div>
+</div>
+<div id="analyzing" class="analyzing hidden">
+  <div class="ripple-box"><div class="ripple"></div><div class="ripple"></div><div class="ripple"></div><div class="ripple-center"></div></div>
+  <div class="ana-text" id="anaText">正 在 感 知 你 的 能 量 ...</div>
+</div>
+<div id="resultWrap" class="result-wrap hidden">
+  <div class="card" id="card"></div>
+  <div class="actions"><button class="act-btn primary" id="saveBtn">保 存 结 果</button><button class="act-btn" onclick="location.reload()">重 新 测 试</button></div>
+  <div id="saveArea" class="hidden"><div class="save-hint">👇 长按图片保存，发小红书 / 朋友圈</div><div class="save-preview"><img id="saveImg"/></div></div>
+  <div class="viral-section"><div class="viral-title">一 键 发 小 红 书</div><div class="viral-sub">复制下方文案，直接粘贴发布</div><div class="copy-box" id="copyBox"></div><div class="viral-btns"><button class="v-btn primary" onclick="copyText()">复 制 文 案</button><button class="v-btn" onclick="copyLink()">复 制 链 接 · 发 给 朋 友 测</button></div></div>
+</div>
+<!-- ══ 了解沐煦页面 ══ -->
+<div id="aboutWrap" class="page-wrap">
+  <button class="page-back-btn" onclick="showAbout(false)">← 返 回 结 果</button>
+  <div class="about-body">
+    <div class="about-head">
+      <div class="about-logo">沐 煦</div>
+      <div class="about-en-sm">MUXU PILATES</div>
+      <div class="about-divider"><span></span><i></i><span></span></div>
+      <div class="about-slogan">沐天地之气 · 煦生命之光</div>
+    </div>
+    <div class="about-sec">
+      <div class="about-sec-title">品 牌 精 神</div>
+      <div class="about-char-row"><span class="about-char">沐</span><span class="about-char-en">to be nourished</span></div>
+      <div class="about-char-desc">水木相生，润泽滋养。如水一般，温柔流动，不争不迫，却能滋养万物。</div>
+      <div class="about-char-row"><span class="about-char">煦</span><span class="about-char-en">to be warmed</span></div>
+      <div class="about-char-desc">春阳和暖，万物生发。如煦日一般，不灼人，却能唤醒沉睡的生命力。</div>
+      <div class="about-text"><p>我们相信，真正的改变不是对抗，而是流动；真正的力量不是逼迫，而是滋养。在沐煦，每一节课都是一次与身体温柔相遇的机会。</p></div>
+    </div>
+    <div class="about-sec">
+      <div class="about-sec-title">空 间 氛 围</div>
+      <div class="about-text">
+        <p>沐煦是一个安静的、只属于你的空间。没有健身房的嘈杂，没有集体课的压力——只有一对一的陪伴，和专注在你身体上的每一分钟。</p>
+        <p>原木、阳光、呼吸、流动。推开门的那一刻，城市的喧嚣被隔在外面。</p>
+      </div>
+    </div>
+    <div class="about-sec">
+      <div class="about-sec-title">课 程 系 列</div>
+      <div class="course-cards">
+        <div class="course-card">
+          <div class="cc-head"><span class="cc-name">沐 · 常规课程</span><span class="cc-tag">基 础 系 列</span></div>
+          <div class="cc-desc">从身体出发，回归流动与平衡。适合所有希望改善体态、建立身体意识、感受普拉提魅力的人。</div>
+          <div class="cc-items"><span class="cc-item">体态矫正</span><span class="cc-item">核心重建</span><span class="cc-item">身体塑形</span><span class="cc-item">柔韧拉伸</span></div>
+        </div>
+        <div class="course-card">
+          <div class="cc-head"><span class="cc-name">煦 · 定制课程</span><span class="cc-tag">专 项 系 列</span></div>
+          <div class="cc-desc">为有特定需求的你量身定制，每一个动作都有明确的目标与方向。</div>
+          <div class="cc-items"><span class="cc-item">孕期维护</span><span class="cc-item">产后修复</span><span class="cc-item">疼痛调理</span><span class="cc-item">体态矫正</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="about-sec">
+      <div class="about-sec-title">关 于 我 们</div>
+      <div class="about-text">
+        <p>沐煦是一家专注女性身心平衡的一对一私教普拉提工作室，由 BASI 认证教练主理，深耕孕产、体态矫正与疼痛调理领域。</p>
+        <p>我们不急于改变你，只是陪你在每一次呼吸中，遇见更好的自己。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 预约页面 ══ -->
+<div id="bookingWrap" class="page-wrap">
+  <button class="page-back-btn" onclick="showBooking(false)">← 返 回 结 果</button>
+  <div class="booking-head">
+    <div class="bh-top">MUXU PILATES</div>
+    <div class="bh-title">预 约 体 验</div>
+    <div class="bh-sub">第一节体验课，从认识你的身体开始<br>一对一，按你的节奏来 (｡•ᴗ•｡)</div>
+  </div>
+  <div class="booking-body">
+    <div class="bsec">
+      <div class="bsec-label">联 系 我 们</div>
+      <div class="binfo-row">
+        <div class="binfo-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.07 12a19.79 19.79 0 01-3.07-8.63A2 2 0 012.18 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.09a16 16 0 006 6l.56-.56a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div>
+        <div><div class="binfo-label">电 话</div><div class="binfo-val">+86 166 5127 9197</div></div>
+      </div>
+      <div class="binfo-row">
+        <div class="binfo-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+        <div><div class="binfo-label">微 信</div><div class="binfo-val">muxu689689</div></div>
+      </div>
+      <div class="binfo-row">
+        <div class="binfo-icon"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
+        <div><div class="binfo-label">地 址</div><div class="binfo-val">苏州工业园区 诚品居所 2幢1509<br>月廊街 8 号</div></div>
+      </div>
+    </div>
+    <div class="booking-note">
+      <div class="booking-note-text">来之前小小准备一下 (｡•ᴗ•｡)<br>穿件方便活动的衣服，带双防滑袜——<br>其他的，我们都帮你安排好啦 ✦</div>
+    </div>
+  </div>
+</div>
+</div><!-- /.stage -->
+<script>
+const TOTAL=11; // 10选择+1排序
+// ============================================================
+//  题库 · 计分已平衡（每维度对可获总分差异≤2）
+// ============================================================
+const quiz=[
+// Q1 跨维度破冰
+{dim:'灵 魂 拷 问',q:'如果你突然决定认真对待自己的身体，最可能是因为——',sub:'摸着良心回答……',o:[
+{t:'💘 最近有喜欢的人，形象不能这么潦草',d:[{d:'塑',w:2}]},
+{t:'👖 试衣服那一刻，我和裤子必须赢一个',d:[{d:'塑',w:2}]},
+{t:'🌬️ 压力太大了，想靠运动把脑子甩干净',d:[{d:'修',w:2}]},
+{t:'🤸 不是我要练，是身体在催我上岗',d:[{d:'觉',w:2}]}]},
+// Q2 力/柔
+{dim:'身 体 日 报',q:'下班回到家，你的身体通常先演哪出？',sub:'一到家，身体的第一反应……',o:[
+{t:'😵‍💫 肩颈：别碰我，我今天已经够努力了',d:[{d:'力',w:2}]},
+{t:'🪑 腰背：再坐五分钟我们就正式闹翻',d:[{d:'力',w:1},{d:'稳',w:1}]},
+{t:'🔋 四肢：电量3%，请立刻接入沙发充电',d:[{d:'柔',w:2}]},
+{t:'🫠 整个人：也没哪坏了，就是灵魂先下班了',d:[{d:'柔',w:2}]}]},
+// Q3 觉/展 + 修/塑
+{dim:'灵 魂 快 照',q:'朋友突然举手机拍你，p完脸之后你接下来最在意——',sub:'脸已经完美了，接下来看……',o:[
+{t:'📸 抬头收下巴了没，气质不能输',d:[{d:'展',w:1},{d:'修',w:1}]},
+{t:'🧍 有没有偷偷挺背，仿佛刚下普拉提床',d:[{d:'觉',w:2}]},
+{t:'😮‍💨 吸气收腹了没，哪怕只有一秒也得瘦',d:[{d:'塑',w:2}]},
+{t:'✨ 身体先不管，表情和氛围感得保住',d:[{d:'展',w:2}]}]},
+// Q4 觉/展 (改为普适版)
+{dim:'身 体 弹 幕',q:'有人对你说"站直了，收腹，肩膀放下来"，你的内心弹幕是——',sub:'不管是妈妈、朋友还是路人甲说的……',o:[
+{t:'🤔 收了，但我不确定收没收对',d:[{d:'觉',w:2}]},
+{t:'😤 我已经很努力了好吗！',d:[{d:'力',w:2}]},
+{t:'💃 先别管这些，整体好看比较重要',d:[{d:'展',w:2}]},
+{t:'😌 行，先假装听懂了，气氛别尴尬',d:[{d:'柔',w:2}]}]},
+// Q5 稳/流
+{dim:'放 弃 心 理 学',q:'你最容易放弃一项运动，通常不是因为懒，而是因为——',sub:'你其实不懒，但就是放弃了……',o:[
+{t:'⏳ 练了半天没变化，我的耐心先走了',d:[{d:'稳',w:2}]},
+{t:'📅 时间根本凑不上，我的日程比我还难约',d:[{d:'稳',w:2}]},
+{t:'🫥 太重复了，练着练着像在上班',d:[{d:'流',w:2}]},
+{t:'🙃 一个人练太容易变成"明天再说"',d:[{d:'流',w:2}]}]},
+// Q6new 身体渴望 修/柔/稳/展/塑
+{dim:'身 体 渴 望',q:'做完一次很舒服的放松或运动后，你最想要的那种感受是——',sub:'跟着直觉选，选最想要的那个……',o:[
+{t:'🍃 轻——像卸掉了什么，整个人终于松开了',d:[{d:'修',w:2},{d:'柔',w:1}]},
+{t:'🪨 稳——像重新站回地上，脚踏实地有底气',d:[{d:'稳',w:2}]},
+{t:'💧 通——某个一直卡着的地方，终于松开了',d:[{d:'修',w:1},{d:'觉',w:1}]},
+{t:'🌟 亮——整个人清醒过来，状态直接上线',d:[{d:'展',w:1},{d:'塑',w:1}]}]},
+// Q7 修/塑
+{dim:'偷 偷 许 愿',q:'你最想偷偷改善、但嘴上不一定承认的是——',sub:'心底最想悄悄变好的……',o:[
+{t:'😮‍💨 肩颈别再这么硬了，我真的累',d:[{d:'修',w:2}]},
+{t:'🪞 站着坐着别总是松松垮垮的',d:[{d:'觉',w:2}]},
+{t:'👗 穿衣服的时候，腰线和背影争点气',d:[{d:'塑',w:2}]},
+{t:'🌟 我想要那种"最近状态真不错啊"的感觉',d:[{d:'展',w:2}]}]},
+// Q8new 身体账单 修/觉/柔/塑/展
+{dim:'身 体 账 单',q:'你的身体有没有一直想处理、但还没认真面对的问题？',sub:'比如高低肩、腰酸、体态歪……或者就是哪里说不清楚不对劲',o:[
+{t:'📌 有，很具体，我知道是哪里，也知道大概原因',d:[{d:'修',w:2},{d:'觉',w:1}]},
+{t:'🌀 有一点，但说不清楚，就是感觉哪里不太对',d:[{d:'觉',w:2},{d:'柔',w:1}]},
+{t:'💭 没有具体问题，就是整体感觉不够好、不够精神',d:[{d:'柔',w:1},{d:'展',w:1}]},
+{t:'🌿 没有，身体挺好的，就是想再更好一点',d:[{d:'塑',w:1},{d:'展',w:1}]}]},
+// Q9 稳/流
+{dim:'坚 持 真 相',q:'你对"长期坚持运动"这件事，最真实的状态是——',sub:'最诚实的那个答案……',o:[
+{t:'📌 我只要开始了，一般都挺认真',d:[{d:'稳',w:2},{d:'力',w:1}]},
+{t:'🍃 我需要练得舒服，才愿意一直来',d:[{d:'柔',w:1},{d:'稳',w:1}]},
+{t:'🎢 我需要一点新鲜感，不然很容易腻',d:[{d:'流',w:2}]},
+{t:'🫠 我不缺动力，缺的是一个把我拎来的人',d:[{d:'流',w:1},{d:'柔',w:1}]}]},
+// Q10new 自己的礼物 跨维度收尾
+{dim:'自 己 的 礼 物',q:'如果可以给现在的自己一个礼物，你最想要的是——',sub:'别管实不实际，选那个心里最先亮起来的……',o:[
+{t:'🚀 一次新体验——帮自己突破，往前走一步',d:[{d:'流',w:2},{d:'塑',w:1}]},
+{t:'🛁 一次真正的放松——把绷着的、堵着的，都松开',d:[{d:'修',w:2},{d:'柔',w:1}]},
+{t:'⚓ 找回稳定感——踏踏实实站在地上的那种感觉',d:[{d:'稳',w:2},{d:'力',w:1}]},
+{t:'🤝 一个开始的推力——就差有人拉我一把',d:[{d:'觉',w:1},{d:'流',w:1}]}]},
+null // Q11 排序
+];
+
+const rankItems=[
+  {emoji:'🩹',label:'肩颈腰背别再闹了',key:'pain'},
+  {emoji:'🧍',label:'体态给我顺起来',key:'posture'},
+  {emoji:'✂️',label:'线条给我立住',key:'sculpt'},
+  {emoji:'💅',label:'气质给我提上去',key:'elegance'},
+  {emoji:'🌿',label:'压力给我放掉',key:'stress'},
+  {emoji:'🔋',label:'能量给我回来',key:'energy'},
+];
+
+// ============================================================
+//  16型数据
+// ============================================================
+const dimNames=[['力','柔'],['觉','展'],['稳','流'],['修','塑']];
+const dimIdx={'力':0,'柔':0,'觉':1,'展':1,'稳':2,'流':2,'修':3,'塑':3};
+
+const T={
+'力觉稳修':{name:'磐石',sub:'满级安全感',en:'THE BEDROCK',emoji:'🪨',energy:'山石之力',tag:'全世界都在卷，你是那块不动的石头',vibes:['靠谱担当','人间定海神针','抗压天花板'],rarity:7,rarityTalent:'你的身体天赋是：<em>扛得住</em>',desc:'你有一种天生的"稳"，别人慌的时候你是最后那道防线。你的身体忠诚地记录了你为所有人扛下的一切——肩颈和腰背的紧张，其实是力量的勋章。现在，是时候让这份力量为自己服务了。',prophecy:'你终于不是在"扛"，而是在"舒展"。肩颈松开的那一刻，你会想——原来不紧绷的自己，也可以这么有力量。从沐煦走出去的那个下午，整个世界都柔软了一度。',pyq:'"今天终于允许自己松了一次，世界没塌"',course:'煦·定制课程',courseDetail:'深层释放 + 体态重建方向，帮你把"为别人撑着"的力量，变成"为自己舒展"的能力。',ctaName:'磐石·释放体验课',ctaLine:'来沐煦，卸下你的铠甲，练一次只为自己的课。',tip:'每天花3分钟，闭眼感受双脚踩在地面的重量。你已经够稳了，现在允许自己松一口气。',match:'蝶舞',matchEmoji:'🦋',matchWhy:'一个把力量内化，一个把美感外放——最互补的能量拍档。',avoid:'磐石',avoidEmoji:'🪨',avoidWhy:'两块石头撞一起，谁也不让谁松——训练会变成比谁更能扛。'},
+'力觉稳塑':{name:'青松',sub:'自律狠人',en:'THE PINE',emoji:'🌲',energy:'生长之力',tag:'你的身体管理，比你的时间管理还严格',vibes:['卷王本王','目标感拉满','行走的执行力'],rarity:9,rarityTalent:'你的身体天赋是：<em>精准进化</em>',desc:'你对自己有清晰的要求，也有把要求变成现实的能力。你不是来"试试"的，是来"练出结果"的。普拉提的精准控制，简直就是为你量身定做的。',prophecy:'你发现了一件事：慢下来不是放弃，是更高级的控制。当你学会用呼吸去引导动作，身体里那些你以为要"拼命练"才能得到的东西，反而自己来了。',pyq:'"今天的核心，对得起我的野心"',course:'沐·常规课程',courseDetail:'体态塑形 + 核心力量方向，在精准控制中实现力与美的平衡。',ctaName:'青松·精进体验课',ctaLine:'来沐煦，遇见比你更"较真"的训练方式。',tip:'训练时试试减速30%——慢下来反而能找到更深层的发力感。高手才懂的秘密。',match:'轻云',matchEmoji:'☁️',matchWhy:'你负责目标和计划，她负责灵感和快乐——永远不会无聊。',avoid:'青松',avoidEmoji:'🌲',avoidWhy:'两个卷王在一起，不是训练是军备竞赛——谁先卷累谁先倒。'},
+'力觉流修':{name:'深泉',sub:'身体感知天才',en:'THE SPRING',emoji:'💧',energy:'感知之力',tag:'你的身体有自己的语言，而你听得懂',vibes:['人体感应器','细节控','直觉型选手'],rarity:5,rarityTalent:'你的身体天赋是：<em>超感知力</em>',desc:'你的身体感知力非常出色——别人要练半年才能找到的"发力感"，你可能一节课就能捕捉到。你的身体一直在跟你说话，现在只需要一个专业的翻译。',prophecy:'你开始信任身体发出的每一个信号。那些微妙的酸、胀、紧的感觉，不再是"忍一忍就好"，而是通往舒适的导航。听懂身体的话，就是最好的养生。',pyq:'"终于搞懂了肩胛骨怎么动，人体说明书+1"',course:'煦·定制课程',courseDetail:'精准疗愈方向，结合呼吸训练，让身体感知力成为最大的训练优势。',ctaName:'深泉·感知体验课',ctaLine:'来沐煦，让你的身体直觉找到最好的翻译。',tip:'你的直觉很准。下次身体发出信号的时候，试着不忽略它——那是你最好的教练。',match:'烈阳',matchEmoji:'☀️',matchWhy:'你感知，她行动——高效又精准的身体对话。',avoid:'轻云',avoidEmoji:'☁️',avoidWhy:'你想精准，她想随便——节奏完全对不上。'},
+'力觉流塑':{name:'弦月',sub:'低调潜力股',en:'THE CRESCENT',emoji:'🌙',energy:'潜藏之力',tag:'没人看见的时候，你也在默默变强',vibes:['闷声搞事业','内核稳定','暗自生长'],rarity:6,rarityTalent:'你的身体天赋是：<em>隐藏进化</em>',desc:'你不是那种高调打卡的人，但你的身体一直在悄悄进化。你的内驱力强、不需要外界认可也能坚持——这种品质在普拉提里极其珍贵。',prophecy:'有一天你会在镜子里看到一个让自己心动的人。不是突然变了，而是那些"没人看见的努力"终于有了形状——站姿变了，走路的节奏变了，眼神里多了一种笃定。',pyq:'"（没发朋友圈，但身体日记又多了一页）"',course:'沐·常规课程',courseDetail:'核心力量 + 整体塑形方向，在流畅动作中释放身体的隐藏潜能。',ctaName:'弦月·专项体验课',ctaLine:'来沐煦，遇见和你一样暗自生长的伙伴。',tip:'给自己建一个"身体日记"——不用发朋友圈，只写给自己看。三个月后你会感谢自己。',match:'焰火',matchEmoji:'✨',matchWhy:'你是安静的深水，她是绚烂的烟花——彼此都能看到自己没有的那面。',avoid:'烈阳',avoidEmoji:'☀️',avoidWhy:'你要默默生长，她要你当众发光——压力山大。'},
+'力展稳修':{name:'晨曦',sub:'元气回血型',en:'THE DAWN',emoji:'🌅',energy:'新生之力',tag:'每一次重新开始，你都比上次更耀眼',vibes:['满血复活','凤凰涅槃','重启就变强'],rarity:8,rarityTalent:'你的身体天赋是：<em>恢复力超强</em>',desc:'你身上有一种"回春力"——不管经历过什么，你总能重新站起来，而且每次重启都比上次更好。你的身体需要一次温柔的、由内而外的唤醒。',prophecy:'你不再害怕"重新开始"。因为每一次回到垫子上，身体都记得你。它没有忘记你曾经的好，只是在等你回来唤醒它。',pyq:'"重启成功，系统已更新 ✓"',course:'煦·定制课程',courseDetail:'体态重建 + 功能恢复方向，系统性唤醒身体的力量与平衡。',ctaName:'晨曦·唤醒体验课',ctaLine:'来沐煦，你的身体一直在等你回来。',tip:'每天靠墙站3分钟，感受四点一线——重建，从"站好"开始。',match:'花开',matchEmoji:'🌸',matchWhy:'你重建根基，她绽放美感——普拉提最完整的旅程。',avoid:'焰火',avoidEmoji:'✨',avoidWhy:'你需要温柔重建，她的节奏会把你拖着跑。'},
+'力展稳塑':{name:'烈阳',sub:'能量发电机',en:'THE SUN',emoji:'☀️',energy:'绽放之力',tag:'你发光的时候，整个房间都是你的舞台',vibes:['行走的多巴胺','人群焦点','越练越嗨'],rarity:10,rarityTalent:'你的身体天赋是：<em>天生发光体</em>',desc:'你对"变美"有强烈的热情和行动力。训练对你来说既是投资也是享受。你的能量感配上普拉提的精准度，简直是王炸组合。',prophecy:'你开始享受一种新的"美"——不是数字变化，而是走进一个房间时所有人都感受到你的气场。从骨骼排列中生长出来的自信，比任何滤镜都高级。',pyq:'"练完照镜子，值回票价 💰"',course:'沐·常规课程',courseDetail:'全身塑形 + 体态美学方向，打造线条、姿态、气质三位一体的蜕变。',ctaName:'烈阳·绽放体验课',ctaLine:'来沐煦，让你的身体成为最高级的表达。',tip:'每周给自己拍一张全身体态照。看得见的进步，是你最好的燃料。',match:'静水',matchEmoji:'🌊',matchWhy:'她让你慢下来，你让她绽放——在一起会变成最好的版本。',avoid:'弦月',avoidEmoji:'🌙',avoidWhy:'你要互动要反馈，她安静得让你以为掉线了。'},
+'力展流修':{name:'山溪',sub:'忙碌中的自愈者',en:'THE BROOK',emoji:'🏞️',energy:'流动之力',tag:'一边冲浪一边疗伤，是你的超能力',vibes:['超级多面手','又忙又美','见缝插针养生'],rarity:11,rarityTalent:'你的身体天赋是：<em>流水自愈力</em>',desc:'你的生活永远排得很满，但你有一种了不起的能力：在高速运转中依然能照顾好自己。你需要的是能跟上你节奏的训练方式。',prophecy:'你学会了不必等"有空了"才善待身体。每周那一节课成了充电仪式——走出沐煦时你感觉不是少了一小时，而是多了一整天的能量。',pyq:'"忙里偷闲充了个电，又能再战三天 🔋"',course:'沐·常规课程 + 煦·定制课程',courseDetail:'常规课程保持活力，定制课程精准修复——双轨并行，为你的高速人生护航。',ctaName:'山溪·充能体验课',ctaLine:'来沐煦，忙碌的你也值得被温柔对待。',tip:'忙碌的日子里，10分钟的拉伸就是对身体最好的温柔。不必完美，但要持续。',match:'清月',matchEmoji:'🌕',matchWhy:'她的安静和你的活力互补——她帮你慢下来，你带她动起来。',avoid:'磐石',avoidEmoji:'🪨',avoidWhy:'你要灵活，她一动不动——你会觉得被锁住。'},
+'力展流塑':{name:'焰火',sub:'宝藏变身王',en:'THE SPARK',emoji:'✨',energy:'蜕变之力',tag:'你不是在变美，你是在进化',vibes:['百变大咖','什么都想试','蜕变体质'],rarity:8,rarityTalent:'你的身体天赋是：<em>超强适应力</em>',desc:'你的身体适应力很棒——什么运动都能很快上手。普拉提是那个能让你"深度进化"而不只是"体验打卡"的选择。',prophecy:'你终于找到了不会"腻"的运动。每一节课身体都给你新反馈——上周做不到的动作这周突然打通了。持续解锁新技能的感觉，让你上瘾。',pyq:'"解锁新动作 ✓ 身体进化中"',course:'沐·常规课程',courseDetail:'全身塑形 + 体态美学方向，系统化你的身体天赋，让每次训练都不白练。',ctaName:'焰火·蜕变体验课',ctaLine:'来沐煦，解锁你身体的下一个版本。',tip:'把每一次训练当作身体的创作。专注、呼吸，让改变自然发生。',match:'深泉',matchEmoji:'💧',matchWhy:'你大胆尝试，她精准感知——效率直接翻倍。',avoid:'静水',avoidEmoji:'🌊',avoidWhy:'你想冲想变，她要你慢下来——你会觉得被拽住。'},
+'柔觉稳修':{name:'静水',sub:'人间清醒体质',en:'THE STILL WATER',emoji:'🌊',energy:'深观之力',tag:'你最大的天赋，是听得懂身体的悄悄话',vibes:['佛系养生家','身体对话师','安静的力量'],rarity:5,rarityTalent:'你的身体天赋是：<em>静水深流</em>',desc:'你的身体感知力是真正的天赋——你能觉察到别人忽略的细微信号。你不需要"燃烧卡路里"式的训练，需要的是对得起你感知力的精准调整。',prophecy:'你发现了比"拼命练"高级一百倍的方式——用觉知感受每一块肌肉，用呼吸调整每一个不适。身体开始变成一个你真正理解的朋友。',pyq:'"今天肩颈终于没那么想骂人了 😌"',course:'煦·定制课程',courseDetail:'精准疗愈 + 呼吸训练方向，在温和中唤醒身体深层的修复力。',ctaName:'静水·滋养体验课',ctaLine:'来沐煦，给你的感知力一个最好的回应。',tip:'每天对一个身体部位说"谢谢"——你的觉知，是疗愈的起点。',match:'烈阳',matchEmoji:'☀️',matchWhy:'你是深水，她是阳光——她让你表达，你让她倾听身体。',avoid:'焰火',avoidEmoji:'✨',avoidWhy:'你要安静感知，她的能量会把你的节奏全打乱。'},
+'柔觉稳塑':{name:'清月',sub:'氛围感雕刻师',en:'THE MOON',emoji:'🌕',energy:'雕琢之力',tag:'别人在练肌肉，你在练气场',vibes:['高级感本人','慢工出细活','气质碾压'],rarity:6,rarityTalent:'你的身体天赋是：<em>天生质感</em>',desc:'你有自己的节奏和审美，不追求剧烈改变，但要求每一步都是"对的"。你的气质底子好，精准调整就能质变。',prophecy:'你的变化不是"瘦了几斤"，而是有人问你"最近是不是在学舞蹈"。你笑而不答——那是每周一次普拉提后脊柱多延伸一厘米的魔法。',pyq:'"有人问我最近是不是在学舞蹈，我只是笑了笑"',course:'沐·常规课程',courseDetail:'核心建立 + 体态塑形方向，在控制与精准中找到身体的高级感。',ctaName:'清月·质感体验课',ctaLine:'来沐煦，雕琢只属于你的高级感。',tip:'从核心开始，腹横肌的启动是气场的"地基"。',match:'山溪',matchEmoji:'🏞️',matchWhy:'你的精致和她的活力是绝配——优雅和能量都有了。',avoid:'轻云',avoidEmoji:'☁️',avoidWhy:'你要精准，她太随意——你会觉得不被认真对待。'},
+'柔觉流修':{name:'春雨',sub:'温柔治愈系',en:'THE RAIN',emoji:'🌧️',energy:'滋养之力',tag:'你对自己温柔，世界就会对你温柔',vibes:['岁月静好','温柔即力量','自愈力满格'],rarity:6,rarityTalent:'你的身体天赋是：<em>自愈力惊人</em>',desc:'你很懂得善待自己，愿意给身体足够时间恢复。这种"不急不躁"在什么都要快的时代是最稀缺的智慧。',prophecy:'你开始享受没有焦虑感的运动——不比速度不比强度。安安静静躺在垫子上，感受呼吸带着身体一点一点打开。下课后你觉得：这才是运动本来的样子。',pyq:'"做了一节没有KPI的运动，灵魂都松了 🧘"',course:'煦·定制课程',courseDetail:'温和疗愈方向，用最尊重身体的方式帮你找回平衡。',ctaName:'春雨·疗愈体验课',ctaLine:'来沐煦，做一次没有KPI的运动。',tip:'恢复期的身体最需要"被听见"。今天不想动？3次深呼吸也是训练。',match:'青松',matchEmoji:'🌲',matchWhy:'她的自律和你的柔软互补——她带你突破，你帮她放松。',avoid:'烈阳',avoidEmoji:'☀️',avoidWhy:'你要温柔，她的强度让你还没开始就想回家。'},
+'柔觉流塑':{name:'轻云',sub:'佛系练家子',en:'THE CLOUD',emoji:'☁️',energy:'自在之力',tag:'不设KPI的人生，身体也跟着自在了',vibes:['自在如风','身体探索家','快乐至上'],rarity:4,rarityTalent:'全馆最稀有的类型！你天生就知道怎么跟身体做朋友',desc:'你和身体的关系是"朋友"而不是"上下级"——不命令、不强迫、不焦虑。这种松弛感是很多人梦寐以求的天赋。',prophecy:'你爱上了"不用赢也很快乐"的感觉。没有打卡压力没有体重焦虑，只有每次下课后身体轻盈得像刚从温泉里出来。普拉提对你不是任务，是礼物。',pyq:'"今天教练说随便动动就好，我信了 ☁️"',course:'沐·常规课程',courseDetail:'瑜伽拉伸 + 体态塑形方向，在变化中保持好奇，在探索中遇见惊喜。',ctaName:'轻云·自在体验课',ctaLine:'来沐煦，上一节没有KPI的课。',tip:'试试"盲盒式训练"——每次上课前不设预期，让身体告诉你想做什么。',match:'青松',matchEmoji:'🌲',matchWhy:'你是她紧绷人生里最好的解药——她的专注也让你的训练更有收获。',avoid:'深泉',avoidEmoji:'💧',avoidWhy:'你要快乐，她太较真——你会觉得在被考试。'},
+'柔展稳修':{name:'古木',sub:'大女主体质',en:'THE OLD TREE',emoji:'🌳',energy:'沉淀之力',tag:'你的从容，是时间酿出来的好底子',vibes:['底盘稳','越活越通透','沉淀型美人'],rarity:7,rarityTalent:'你的身体天赋是：<em>底子好到惊人</em>',desc:'你身上有经过沉淀的从容——知道什么对自己好，也知道好东西需要时间。你的身体底子非常好，只需要一个懂你的人帮你把"好底子"变成"好状态"。',prophecy:'你发现一件开心的事：你的身体比你想象中"能干"得多。那些以为做不了的动作试了一下居然可以——你的底子一直在，只是等一个机会醒过来。',pyq:'"我的身体居然还能做到这个？？ 🤯"',course:'煦·定制课程',courseDetail:'精准调整 + 功能优化方向，尊重你的身体智慧，让好底子真正发光。',ctaName:'古木·唤醒体验课',ctaLine:'来沐煦，唤醒你身体里藏着的好底子。',tip:'每天散步就是最好的运动基础。走路时关注脚底的感受，觉知在每一步里。',match:'焰火',matchEmoji:'✨',matchWhy:'你的稳和她的闪互补——你教她沉淀，她帮你释放。',avoid:'青松',avoidEmoji:'🌲',avoidWhy:'你要从容，她要效率——节奏差太多会被催得焦虑。'},
+'柔展稳塑':{name:'花开',sub:'天生体态挂',en:'THE BLOOM',emoji:'🌸',energy:'气韵之力',tag:'你不是在变美，你是在回到你本来的样子',vibes:['仙女本仙','优雅到骨子里','气质天赋'],rarity:5,rarityTalent:'你的身体天赋是：<em>天生气韵</em>',desc:'你追求的不是"练大肌肉"，而是整体的优雅——站姿、走路、举手投足间的"feel"。你的气质底盘已经很好，普拉提是精雕细琢、锦上添花。',prophecy:'你开始被人夸"气质变了"——不是五官变了不是瘦了，而是说不清的东西：可能是脊柱多延伸了两厘米，可能是坐下时不自觉收了核心。你知道那是什么，笑而不语。',pyq:'"脊柱又多延伸了一厘米，谁懂 🌸"',course:'沐·常规课程',courseDetail:'体态美学 + 拉伸舒展方向，从脊柱延伸到指尖的全身气质提升。',ctaName:'花开·气韵体验课',ctaLine:'来沐煦，让你的美从骨骼里长出来。',tip:'走路时想象头顶有根线轻轻向上拉——就这一个意识就能改变整个气场。',match:'晨曦',matchEmoji:'🌅',matchWhy:'你们都追求由内而外的改变——一起训练，美得很有层次。',avoid:'山溪',avoidEmoji:'🏞️',avoidWhy:'你要精致，她太赶——你会觉得被催着跑。'},
+'柔展流修':{name:'柳丝',sub:'反差感天才',en:'THE WILLOW',emoji:'🌿',energy:'柔韧之力',tag:'看起来是软妹子，骨子里是狠角色',vibes:['柔韧性天赋','反差萌','外柔内刚'],rarity:4,rarityTalent:'恭喜解锁全馆<em>最柔软</em>的身体天赋！',desc:'你的柔韧性是天赋——很多人苦练半年的动作你可能第一节课就能轻松完成。不过"太柔"也意味着缺少支撑，需要在柔软中建立力量"骨架"。',prophecy:'你终于理解了"柔中带刚"——不是变硬，而是在柔软里找到支撑力。就像柳树，看着随风摇曳，其实根基深得很。你的身体开始既好看又好用。',pyq:'"柔韧满分但核心零分的人正在补课中 🌿"',course:'沐·常规课程 + 煦·定制课程',courseDetail:'常规课程建立核心力量，定制课程强化关节稳定性——让柔韧天赋变成真正优势。',ctaName:'柳丝·塑能体验课',ctaLine:'来沐煦，给你的柔软加一副隐形骨架。',tip:'柔韧性好的人更要练核心。腹部力量是你所有优雅动作的"隐形底座"。',match:'磐石',matchEmoji:'🪨',matchWhy:'你柔她刚——"刚柔并济"的教科书组合。',avoid:'柳丝',avoidEmoji:'🌿',avoidWhy:'两个人都太柔没人当支撑——一起变成一滩水。'},
+'柔展流塑':{name:'蝶舞',sub:'身体艺术家',en:'THE BUTTERFLY',emoji:'🦋',energy:'表达之力',tag:'别人在运动，你在用身体写诗',vibes:['天生舞者','美学天赋','身体会说话'],rarity:3,rarityTalent:'全馆<em>最稀有</em>！你的身体表达力是真正的艺术天赋',desc:'你的身体有天然的表达力——同样的动作你做出来就是比别人好看。这是你对"美"的感知力在身体层面的投射。普拉提对你不只是训练，更是身体的艺术。',prophecy:'你找到了让身体"说话"的方式。每个动作不再只是训练，而是表达——你的力量、柔韧、节奏感在垫子上编织成只属于你的舞蹈。有人说你"练普拉提像在跳舞"，你觉得那是最好的夸奖。',pyq:'"谁懂啊，今天整个人都很有气质 💅"',course:'沐·常规课程',courseDetail:'全身塑形 + 瑜伽拉伸方向，让每一个动作都充满流动的美感。',ctaName:'蝶舞·美学体验课',ctaLine:'来沐煦，让你的身体说出最美的语言。',tip:'在日常中保持"身体觉知"——拿杯子、开门、转身，都可以是优雅的。',match:'磐石',matchEmoji:'🪨',matchWhy:'你的美感加上她的力量——效果和颜值都拉满。',avoid:'蝶舞',avoidEmoji:'🦋',avoidWhy:'两个艺术家谁也不服谁的美学——好看但没效率。'},
+};
+
+// ============================================================
+//  蒙特卡洛模拟 · 动态计算稀有度
+// ============================================================
+function computeRarity(){
+  const SIM=20000;
+  const counts={};
+  Object.keys(T).forEach(k=>counts[k]=0);
+
+  for(let s=0;s<SIM;s++){
+    const scores={力:0,柔:0,觉:0,展:0,稳:0,流:0,修:0,塑:0};
+    // 模拟Q1-Q10（跳过null的Q11排序题）
+    for(let qi=0;qi<quiz.length-1;qi++){
+      const q=quiz[qi];
+      if(!q)continue;
+      const pick=q.o[Math.floor(Math.random()*q.o.length)];
+      pick.d.forEach(({d,w})=>{scores[d]=(scores[d]||0)+w});
+    }
+    // 按四个维度对决出胜者
+    const r=[
+      scores['力']>=scores['柔']?'力':'柔',
+      scores['觉']>=scores['展']?'觉':'展',
+      scores['稳']>=scores['流']?'稳':'流',
+      scores['修']>=scores['塑']?'修':'塑'
+    ].join('');
+    if(counts[r]!==undefined)counts[r]++;
+  }
+
+  // 写回每个类型的rarity（百分比，最低1%）
+  Object.keys(T).forEach(k=>{
+    T[k].rarity=Math.max(1,Math.round(counts[k]/SIM*100));
+  });
+}
+computeRarity();
+
+// ============================================================
+//  流程
+// ============================================================
+let curQ=0;const answers={};const selectedIdx={};let rankOrder=[];
+function startQuiz(){document.getElementById('welcome').classList.add('hidden');document.getElementById('quizWrap').classList.remove('hidden');renderQuestion(0);}
+function renderQuestion(idx){
+  curQ=idx;
+  const card=document.getElementById('qCard');card.className='q-card enter';
+  document.getElementById('qBarFill').style.width=(idx/TOTAL*100)+'%';
+  document.getElementById('qNum').textContent=`${idx+1} / ${TOTAL}`;
+  if(idx===10){renderRankQ(card);}else{renderNormalQ(idx,card);}
+  requestAnimationFrame(()=>{requestAnimationFrame(()=>{card.className='q-card';});});
+}
+function renderNormalQ(idx,card){
+  const q=quiz[idx];
+  const savedIdx=selectedIdx[idx];
+  card.innerHTML=`<div class="q-dim">${q.dim}</div><div class="q-text">${q.q}</div>${q.sub?`<div class="q-sub">${q.sub}</div>`:''}<div class="q-opts">${q.o.map((o,i)=>`<button class="q-opt${savedIdx===i?' selected':''}" onclick="pickOpt(${idx},${i})"><span>${o.t}</span></button>`).join('')}</div>
+  <div class="q-nav">
+    ${idx>0?`<button class="q-nav-btn" onclick="goPrev()">← 上 一 题</button>`:''}
+    <button class="q-nav-btn next" id="nextBtn" ${savedIdx===undefined?'disabled':''} onclick="goNext()">下 一 题 →</button>
+  </div>`;
+}
+function renderRankQ(card){
+  card.innerHTML=`<div class="q-dim">训 练 愿 望</div><div class="q-text">给你的身体愿望排个序：最想优先解决的 TOP3 👇</div><div class="rank-hint">按重要程度依次点击（至少选3个）</div><div class="rank-grid" id="rankGrid">${rankItems.map((r,i)=>`<button class="rank-item${rankOrder.indexOf(i)>=0?' ranked':''}" data-idx="${i}" onclick="toggleRank(${i})"><div class="rank-badge" id="rb${i}">${rankOrder.indexOf(i)>=0?rankOrder.indexOf(i)+1:''}</div><div class="rank-emoji">${r.emoji}</div><div class="rank-label">${r.label}</div></button>`).join('')}</div>
+  <div class="q-nav">
+    <button class="q-nav-btn" onclick="goPrev()">← 上 一 题</button>
+    <button class="q-nav-btn next" id="rankSubmit" ${rankOrder.length<3?'disabled':''} onclick="submitRank()">确 认 排 序</button>
+  </div>`;
+}
+function toggleRank(idx){
+  const pos=rankOrder.indexOf(idx);if(pos>=0)rankOrder.splice(pos,1);else rankOrder.push(idx);
+  rankItems.forEach((_,i)=>{const el=document.querySelector(`.rank-item[data-idx="${i}"]`),badge=document.getElementById('rb'+i),rpos=rankOrder.indexOf(i);if(rpos>=0){el.classList.add('ranked');badge.textContent=rpos+1;}else{el.classList.remove('ranked');badge.textContent='';}});
+  const btn=document.getElementById('rankSubmit');if(btn)btn.disabled=rankOrder.length<3;
+}
+function submitRank(){document.getElementById('qBarFill').style.width='100%';setTimeout(showAnalyzing,400);}
+function pickOpt(qIdx,oIdx){
+  const q=quiz[qIdx],o=q.o[oIdx];
+  answers[qIdx]=o.d;
+  selectedIdx[qIdx]=oIdx;
+  document.querySelectorAll('.q-opt').forEach((el,i)=>el.classList.toggle('selected',i===oIdx));
+  const nb=document.getElementById('nextBtn');if(nb)nb.disabled=false;
+}
+function goNext(){
+  if(selectedIdx[curQ]===undefined)return;
+  const card=document.getElementById('qCard');card.className='q-card exit';
+  setTimeout(()=>{renderQuestion(curQ+1);},350);
+}
+function goPrev(){
+  if(curQ<=0)return;
+  const card=document.getElementById('qCard');card.className='q-card exit';
+  setTimeout(()=>{renderQuestion(curQ-1);},350);
+}
+function showAnalyzing(){
+  document.getElementById('quizWrap').classList.add('hidden');document.getElementById('analyzing').classList.remove('hidden');
+  const msgs=['正 在 感 知 你 的 能 量 ...','读 取 力 量 与 柔 韧 ...','匹 配 专 属 图 谱 ...','解 锁 隐 藏 天 赋 ...'];
+  let i=0;const el=document.getElementById('anaText');
+  const t=setInterval(()=>{i++;if(i<msgs.length)el.textContent=msgs[i];else{clearInterval(t);showResult();}},1200);
+}
+
+// ============================================================
+//  星图 & 雷达
+// ============================================================
+function drawStarMap(canvas){
+  const W=canvas.width=360,H=canvas.height=220,ctx=canvas.getContext('2d');
+  const stars=[];for(let i=0;i<60;i++)stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.2+.3,a:Math.random()*.4+.1,s:Math.random()*2+1});
+  const ts=[{x:80,y:40},{x:180,y:30},{x:280,y:45},{x:50,y:90},{x:140,y:75},{x:220,y:85},{x:310,y:80},{x:40,y:140},{x:130,y:150},{x:230,y:140},{x:300,y:145},{x:70,y:190},{x:160,y:185},{x:250,y:195},{x:330,y:175},{x:180,y:110}];
+  const cx=W/2,cy=H/2;let f=0;
+  !function draw(){ctx.clearRect(0,0,W,H);stars.forEach(s=>{const fl=Math.sin(f*.02*s.s+s.x)*.3+.7;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(200,169,110,${s.a*fl})`;ctx.fill()});ts.forEach((s,i)=>{if(i<ts.length-1){ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(ts[i+1].x,ts[i+1].y);ctx.strokeStyle='rgba(200,169,110,0.06)';ctx.lineWidth=.5;ctx.stroke()}ctx.beginPath();ctx.arc(s.x,s.y,1.5,0,Math.PI*2);ctx.fillStyle='rgba(200,169,110,0.25)';ctx.fill()});const g=Math.sin(f*.03)*.15+.85,gr=ctx.createRadialGradient(cx,cy,0,cx,cy,50);gr.addColorStop(0,`rgba(200,169,110,${.3*g})`);gr.addColorStop(.5,`rgba(200,169,110,${.08*g})`);gr.addColorStop(1,'rgba(200,169,110,0)');ctx.fillStyle=gr;ctx.fillRect(cx-50,cy-50,100,100);ctx.beginPath();ctx.arc(cx,cy,3,0,Math.PI*2);ctx.fillStyle=`rgba(232,213,176,${g})`;ctx.fill();ctx.beginPath();ctx.arc(cx,cy,1.5,0,Math.PI*2);ctx.fillStyle='#FAF6EF';ctx.fill();f++;requestAnimationFrame(draw)}();
+}
+function makeRadar(result){
+  const size=260,cx=size/2,cy=size/2,r=85,n=8;
+  const traits=['力','觉','稳','修','柔','展','流','塑'],pairIdx=[0,1,2,3,0,1,2,3],isFirst=[1,1,1,1,0,0,0,0];
+  const angles=traits.map((_,i)=>-Math.PI/2+i*(Math.PI*2/n));
+  const vals=traits.map((_,i)=>{const pi=pairIdx[i],res=result[pi],first=dimNames[pi][0];return isFirst[i]?(res.pick===first?res.pct/100:(100-res.pct)/100):(res.pick!==first?res.pct/100:(100-res.pct)/100)});
+  const gl=[.33,.66,1].map(s=>angles.map(a=>`${cx+Math.cos(a)*r*s},${cy+Math.sin(a)*r*s}`).join(' '));
+  const ax=angles.map(a=>`<line x1="${cx}" y1="${cy}" x2="${cx+Math.cos(a)*r}" y2="${cy+Math.sin(a)*r}" stroke="rgba(200,169,110,0.15)" stroke-width="0.5"/>`).join('');
+  const gr=gl.map(p=>`<polygon points="${p}" fill="none" stroke="rgba(200,169,110,0.1)" stroke-width="0.5"/>`).join('');
+  const dp=vals.map((v,i)=>`${cx+Math.cos(angles[i])*r*v},${cy+Math.sin(angles[i])*r*v}`).join(' ');
+  const dots=vals.map((v,i)=>v<.4?'':`<circle cx="${cx+Math.cos(angles[i])*r*v}" cy="${cy+Math.sin(angles[i])*r*v}" r="3" fill="#C8A96E"/>`).join('');
+  const lbl=traits.map((t,i)=>{const pi=pairIdx[i],res=result[pi],ip=res.pick===t,d=ip?r+24:r+20,lx=cx+Math.cos(angles[i])*d,ly=cy+Math.sin(angles[i])*d;return`<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central" fill="${ip?'#C8A96E':'rgba(140,126,106,0.45)'}" font-size="${ip?14:11}" font-family="Noto Serif SC,serif" letter-spacing="2" style="font-weight:${ip?400:300}">${t}</text>`}).join('');
+  return`<svg viewBox="0 0 ${size} ${size}" class="radar-svg" xmlns="http://www.w3.org/2000/svg">${gr}${ax}<polygon points="${dp}" fill="rgba(200,169,110,0.12)" stroke="#C8A96E" stroke-width="1.5"/>${dots}${lbl}</svg>`;
+}
+
+// ============================================================
+//  结果
+// ============================================================
+function showResult(){
+  const scores=[{},{},{},{}];
+  for(let i=0;i<10;i++){if(!answers[i])continue;answers[i].forEach(({d,w})=>{const di=dimIdx[d];scores[di][d]=(scores[di][d]||0)+w})}
+  const result=scores.map((s,i)=>{const[a,b]=dimNames[i],av=s[a]||0,bv=s[b]||0,total=av+bv||1,pa=Math.round(av/total*100);return{pick:pa>=50?a:b,other:pa>=50?b:a,pct:pa>=50?pa:100-pa}});
+  const code=result.map(r=>r.pick).join(''),t=T[code]||T['柔觉稳修'];
+  const top3=rankOrder.slice(0,3).map(i=>rankItems[i]);
+  const focusMap={pain:'特别关注疼痛管理与深层释放',posture:'重点针对体态校准与脊柱排列',sculpt:'聚焦线条雕塑与肌肉精准激活',elegance:'着重气质提升与身体美学表达',stress:'融入呼吸减压与身心放松训练',energy:'强化能量唤醒与活力重建'};
+  const topKey=rankItems[rankOrder[0]]?.key||'';const focusLine=focusMap[topKey]||'';
+
+  document.getElementById('card').innerHTML=`
+    <div class="card-header">
+      <div class="ch-brand">MUXU PILATES · BODY PORTRAIT</div><div class="ch-type-en">${t.en}</div>
+      <div class="ch-emoji">${t.emoji}</div><div class="ch-name">${t.name}</div>
+      <div class="ch-subtitle">${t.sub}</div><div class="ch-energy">✦ ${t.energy} ✦</div>
+      <div class="ch-tag">「 ${t.tag} 」</div>
+      <div class="vibe-tags">${t.vibes.map(v=>`<span class="vibe-tag">#${v}</span>`).join('')}</div>
+    </div>
+    <div class="starmap"><canvas id="starCanvas"></canvas><div class="star-rarity"><div class="star-label">在 沐 煦 的 能 量 图 谱 中</div><div class="star-pct" id="rarityNum">0<span>%</span></div><div class="star-sub">的 人 与 你 同 频</div><div class="star-talent">${t.rarityTalent}</div></div></div>
+    <div class="radar-section"><div class="radar-label">能 量 维 度</div>${makeRadar(result)}</div>
+    <div class="card-body">
+      <div class="sec"><div class="sec-label">你 的 身 体 语 言</div><div class="sec-content">${t.desc}</div></div>
+      <div class="sec"><div class="sec-label">能 量 预 言</div><div class="prophecy-box"><div class="prophecy-title">当 你 开 始 练 习</div><div class="prophecy-content">${t.prophecy}</div></div></div>
+      ${top3.length?`<div class="sec"><div class="sec-label">你 的 训 练 优 先 级</div><div class="priority-box">${top3.map((r,i)=>`<span class="pri-tag t${i+1}">${r.emoji} ${r.label}</span>`).join('')}</div></div>`:''}
+      <div class="sec"><div class="sec-label">推 荐 课 程 方 向</div><div class="course-box"><div class="course-track">${t.course}</div><div class="course-desc">${t.courseDetail}${focusLine?'<br>根据你的优先级，'+focusLine+'。':''}</div></div></div>
+      <div class="sec"><div class="sec-label">能 量 搭 档</div>
+        <div class="match-box"><div class="match-label">天 选 搭 子</div><div class="match-names">${t.matchEmoji} ${t.match}</div><div class="match-desc">${t.matchWhy}</div></div>
+        <div class="avoid-box"><div class="avoid-label">避 雷 搭 档</div><div class="avoid-names">${t.avoidEmoji} ${t.avoid}</div><div class="avoid-desc">${t.avoidWhy}</div></div>
+      </div>
+      <div class="sec"><div class="sec-label">今 日 身 体 锦 囊</div><div class="sec-content">${t.tip}</div></div>
+    </div>
+    <div class="card-footer"><div class="cf-logo">沐 煦</div><div class="cf-en">MUXU PILATES</div>
+      <div class="cf-nudge-title">来 沐 煦 试 试 看 ✦</div>
+      <div class="cf-cta-main">体验一节【${t.ctaName}】</div><div class="cf-cta-sub">${t.ctaLine}</div><div class="cf-price">体验价 ¥128</div><div class="cf-addr">苏州工业园区 · 诚品居所 · 月廊街8号 2幢 1509</div>
+      <div class="cf-action-row">
+        <button class="cf-btn-outline" onclick="showAbout(true)">了 解 沐 煦</button>
+        <button class="cf-btn-fill" onclick="showBooking(true)">我 要 预 约 (｡•ᴗ•｡)</button>
+      </div>
+    </div>`;
+
+  const canvas=document.getElementById('starCanvas');if(canvas)drawStarMap(canvas);
+  let cur=0;const target=t.rarity,numEl=document.getElementById('rarityNum');
+  const counter=setInterval(()=>{cur++;if(cur>=target){cur=target;clearInterval(counter)}numEl.innerHTML=`${cur}<span>%</span>`},120);
+
+  const priText=top3.length?`\n我的训练优先级：${top3.map(r=>r.emoji+r.label).join(' > ')}`:'';
+  const shareText=`普拉提人格测试｜我是"${t.name}"型选手！\n测出来只有${t.rarity}%的人拥有的【${t.sub}】体质${t.emoji}\n主打一个 ${t.vibes.map(v=>'#'+v).join(' ')}\n「${t.tag}」💪${priText}\n\n练完最想发的朋友圈：\n${t.pyq}\n\n我的天选搭子是"${t.match}"${t.matchEmoji}\n避雷搭档是"${t.avoid}"${t.avoidEmoji}😂\n你们是什么类型？快来认领～👇\n\n📍沐煦 MUXU Pilates · 苏州诚品居所\n#普拉提 #身材管理 #苏州普拉提 #身体能量测试`;
+  document.getElementById('copyBox').textContent=shareText;window._shareText=shareText;
+  document.getElementById('analyzing').classList.add('hidden');document.getElementById('resultWrap').classList.remove('hidden');
+
+  document.getElementById('saveBtn').onclick=async()=>{
+    const btn=document.getElementById('saveBtn');btn.textContent='生 成 中 ...';btn.disabled=true;
+    try{const c=await html2canvas(document.getElementById('card'),{scale:3,backgroundColor:'#FAF6EF',useCORS:true,logging:false});const url=c.toDataURL('image/png');document.getElementById('saveImg').src=url;document.getElementById('saveArea').classList.remove('hidden');if(!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)){const a=document.createElement('a');a.download=`沐煦身体画像_${t.name}.png`;a.href=url;a.click()}document.getElementById('saveArea').scrollIntoView({behavior:'smooth',block:'center'})}catch(e){console.error(e);alert('生成失败，请尝试截图保存')}
+    btn.textContent='保 存 结 果';btn.disabled=false;
+  };
+}
+function showAbout(show){
+  document.getElementById('resultWrap').style.display=show?'none':'block';
+  document.getElementById('aboutWrap').classList.toggle('active',show);
+  if(show)window.scrollTo(0,0);
+}
+function showBooking(show){
+  document.getElementById('resultWrap').style.display=show?'none':'block';
+  document.getElementById('bookingWrap').classList.toggle('active',show);
+  if(show)window.scrollTo(0,0);
+}
+function copyText(){const text=window._shareText||'';if(navigator.clipboard?.writeText){navigator.clipboard.writeText(text).then(()=>{const b=document.querySelectorAll('.v-btn')[0];b.textContent='已 复 制 ！';setTimeout(()=>b.textContent='复 制 文 案',2500)}).catch(()=>fb(text))}else fb(text)}
+function copyLink(){const url=location.href;if(navigator.clipboard?.writeText){navigator.clipboard.writeText(url).then(()=>{const b=document.querySelectorAll('.v-btn')[1];b.textContent='已 复 制 ！';setTimeout(()=>b.textContent='复 制 链 接 · 发 给 朋 友 测',2500)}).catch(()=>fb(url))}else fb(url)}
+function fb(t){const ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');alert('已复制！')}catch(e){alert('请手动复制')}document.body.removeChild(ta)}
+</script></body></html>
